@@ -1,41 +1,33 @@
 // import React from 'react'
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+// import { faTrash } from '@fortawesome/free-solid-svg-icons'
+// export const Todo = ({task, deleteTodo, editTodo, toggleComplete}) => {
 
-// const Todo = () => {
 //   return (
-//     <div className='Todo'>
-//       <p>Go to school</p>
+//     <div className="Todo">
+//         <p>Go to school</p>
+//         <div>
+//         <FontAwesomeIcon icon={faPenToSquare} onClick={() => editTodo(task.id)} />
+//         <FontAwesomeIcon icon={faTrash} onClick={() => deleteTodo(task.id)} />
+//         </div>
 //     </div>
 //   )
 // }
 
-// export default Todo
+import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
+export const Todo = ({task, deleteTodo, editTodo, toggleComplete}) => {
 
-import React from "react";
-import { IconButton } from "@chakra-ui/react";
-import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
-
-const TodoItem = ({ task, editTodo, deleteTodo }) => {
   return (
-    <>
-      {/* Edit Icon */}
-      <IconButton
-        icon={<EditIcon />}
-        onClick={() => editTodo(task.id)}
-        variant="ghost"
-        size="sm"
-        aria-label="Edit"
-      />
-
-      {/* Delete Icon */}
-      <IconButton
-        icon={<DeleteIcon />}
-        onClick={() => deleteTodo(task.id)}
-        variant="ghost"
-        size="sm"
-        aria-label="Delete"
-      />
-    </>
-  );
-};
-
-export default TodoItem;
+    <div className="Todo">
+        <p className={`${task.completed ? 'completed' : ""}`} onClick={() => toggleComplete(task.id)}>{task.task}</p>
+        <div>
+        <FontAwesomeIcon icon={faPenToSquare} onClick={() => editTodo(task.id)} />
+        <FontAwesomeIcon icon={faTrash} onClick={() => deleteTodo(task.id)} />
+        </div>
+    </div>
+  )
+}
