@@ -1,27 +1,56 @@
-import React, { useState } from "react";
-import { Todo } from "./Todo";
-import { TodoForm } from "./Todoform";
-import { v4 as uuidv4 } from "uuid";
-import { EditTodoForm } from "./EditTodoForm";
+import React, { useState, useEffect } from 'react';
+import Todo from './Todo';
+import TodoForm from './Todoform';
+import EditTodoForm from './EditTodoForm';
+import { v4 as uuidv4 } from 'uuid';
 
-export const TodoWrapper = () => {
+const TodoWrapper = () => {
   const [todos, setTodos] = useState([]);
 
+  useEffect(() => {
+    // Fetch initial todos from the server or any other data source
+    // and update the state with the fetched data
+    const fetchTodos = async () => {
+      try {
+        // Perform the fetch request to get todos
+        const response = await fetch('http://localhost:9292/tasks');
+        const data = await response.json();
+
+        // Transform the received data and update the state
+        const transformedTodos = data.map((todo) => ({
+          id: todo.id,
+          task: todo.task,
+          completed: todo.completed,
+          isEditing: false,
+        }));
+        setTodos(transformedTodos);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchTodos();
+  }, []);
+
   const addTodo = (todo) => {
-    setTodos([
-      ...todos,
-      { id: uuidv4(), task: todo, completed: false, isEditing: false },
-    ]);
+    const newTodo = {
+      id: uuidv4(),
+      task: todo,
+      completed: false,
+      isEditing: false,
+    };
+    setTodos([...todos, newTodo]);
   };
 
-  const deleteTodo = (id) => setTodos(todos.filter((todo) => todo.id !== id));
+  const deleteTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
 
   const toggleComplete = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
+    const updatedTodos = todos.map((todo) =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
     );
+    setTodos(updatedTodos);
   };
 
   const editTodo = (id) => {
@@ -44,10 +73,10 @@ export const TodoWrapper = () => {
     <div className="TodoWrapper">
       <h1>Get Things Done!</h1>
       <TodoForm addTodo={addTodo} />
-      
+
       {todos.map((todo) =>
         todo.isEditing ? (
-          <EditTodoForm editTodo={editTask} task={todo} />
+          <EditTodoForm editTodo={editTask} task={todo} key={todo.id} />
         ) : (
           <Todo
             key={todo.id}
@@ -61,3 +90,5 @@ export const TodoWrapper = () => {
     </div>
   );
 };
+
+export default TodoWrapper;
